@@ -1,3 +1,6 @@
+# Local config files
+.vscode
+
 # Nuxt dev/build outputs
 .output
 .data

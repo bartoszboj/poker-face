@@ -1,0 +1,7 @@
+.NoButtonHoverEffect {
+    &.v-btn:hover {
+        & > .v-btn__overlay {
+            opacity: 0;
+        }
+    }
+}
