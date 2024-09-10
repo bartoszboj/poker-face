@@ -1,4 +1,4 @@
-enum LoginEnum {
+enum EnumLogin {
     LoginKey = 'login',
     RegisterKey = 'register',
     UsernameMaxCharacters = 20,
@@ -6,4 +6,4 @@ enum LoginEnum {
     PasswordMaxCharacters = 50,
 }
 
-export default LoginEnum
+export default EnumLogin
