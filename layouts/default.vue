@@ -52,7 +52,7 @@
                 </v-btn>
             </v-toolbar-items>
             <v-spacer />
-            <v-btn>
+            <v-btn @click="openModal(EnumModals.GAME_MODAL)">
                 <template #append>
                     <v-icon size="large">mdi-cards-playing-outline</v-icon>
                 </template>
@@ -72,9 +72,11 @@
     import Container from '~/components/Container/Container.vue'
     import LocaleLink from '~/components/Utils/LocaleLink/LocaleLink.vue'
     import EnumRoutes from '~/Enums/EnumRoutes'
+    import EnumModals from '~/Enums/EnumModals'
 
     const route = useRoute()
     const localePath = useLocalePath()
+    const { openModal } = useModalManagerStore()
 
     const toolbarItems = [
         {
