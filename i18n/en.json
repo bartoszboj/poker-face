@@ -21,5 +21,8 @@
     "Surname must be less than NameMaxCharacters characters.": "Surname must be less than {NameMaxCharacters} characters.",
     "E-mail must be valid.": "E-mail must be valid.",
     "Password must be less than PasswordMaxCharacters characters.": "Password must be less than {PasswordMaxCharacters} characters.",
-    "Passwords must match.": "Passwords must match."
+    "Passwords must match.": "Passwords must match.",
+    "Global ranking": "Global ranking",
+    "Your groups": "Your groups",
+    "Global": "Global"
 }

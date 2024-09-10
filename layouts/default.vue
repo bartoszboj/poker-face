@@ -8,7 +8,7 @@
             <v-spacer />
             <span>poker-face</span>
             <v-spacer />
-            <locale-link v-if="!isLogged" to="/login">
+            <locale-link v-if="!isLogged" :to="`/${EnumRoutes.LOGIN}`">
                 <v-btn size="small" variant="text">
                     <template #append>
                         <v-icon> mdi-login </v-icon>
@@ -31,12 +31,13 @@
                 </template>
             </v-btn>
         </v-system-bar>
-        <v-navigation-drawer order="1">
-            <v-list>
-                <v-list-item link title="item 1" />
-                <v-list-item link title="item 2" />
-                <v-list-item link title="item 3" />
-            </v-list>
+        <v-navigation-drawer
+            v-model="isDrawerOpened"
+            order="1"
+            persisent
+            :scrim="false"
+        >
+            <container :component="sideNavigationComponent" />
         </v-navigation-drawer>
         <v-app-bar order="2">
             <v-toolbar-items class="flex">
@@ -59,7 +60,6 @@
             </v-btn>
         </v-app-bar>
         <v-main>
-            <v-container />
             <slot />
         </v-main>
         <Footer />
@@ -69,16 +69,17 @@
 <script lang="ts" setup>
     import Footer from '~/components/Footer/Footer.vue'
     import Avatar from '~/components/Avatar/Avatar.vue'
+    import Container from '~/components/Container/Container.vue'
     import LocaleLink from '~/components/Utils/LocaleLink/LocaleLink.vue'
+    import EnumRoutes from '~/Enums/EnumRoutes'
 
     const route = useRoute()
     const localePath = useLocalePath()
-    const { t } = useI18n()
 
     const toolbarItems = [
         {
             name: 'Scoreboard',
-            to: '/scoreboard',
+            to: '/scoreboard/global',
         },
         {
             name: 'Game history',
@@ -94,14 +95,32 @@
         },
     ]
 
+    const isDrawerOpened = ref(false)
+    const sideNavigationComponent = computed(
+        () => route?.meta?.sideNavigationComponent,
+    )
+
     function isRouteActive(link: string) {
-        return link === route.path
+        return link === localePath(`/${EnumRoutes.SCOREBOARD_GLOBAL}`) &&
+            route.path.includes(EnumRoutes.SCOREBOARD)
+            ? true
+            : link === route.path
     }
 
     const isLogged = false
     const userName = 'Bartek'
     const avatarSrc =
         'https://scontent-waw2-2.xx.fbcdn.net/v/t31.18172-1/15724546_1369417316416570_1515949336552278728_o.jpg?stp=dst-jpg_p200x200&_nc_cat=103&ccb=1-7&_nc_sid=e4545e&_nc_ohc=IGA9E3oDTw0Q7kNvgE2WoI7&_nc_ht=scontent-waw2-2.xx&oh=00_AYC-jFX06OQs3WanxQDmbfBaCjiLk-vUBP54ni5aC2fUaw&oe=66DCA349'
+
+    watch(
+        () => route.meta.sideNavigationComponent,
+        () => {
+            isDrawerOpened.value = !!(
+                route?.meta?.sideNavigationComponent &&
+                Object.keys(route.meta.sideNavigationComponent).length
+            )
+        },
+    )
 </script>
 
 <style lang="scss"></style>

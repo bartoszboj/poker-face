@@ -10,6 +10,7 @@ export default defineNuxtConfig({
         '@nuxt/eslint',
         'vuetify-nuxt-module',
         '@nuxtjs/device',
+        'nuxt-lodash',
     ],
     vuetify: {
         vuetifyOptions: './vuetify.config.ts',
@@ -27,6 +28,17 @@ export default defineNuxtConfig({
         detectBrowserLanguage: {
             useCookie: false,
         },
+    },
+    lodash: {
+        prefix: '_',
+        prefixSkip: ['string'],
+        upperAfterPrefix: false,
+        exclude: ['map'],
+        alias: [
+            ['camelCase', 'stringToCamelCase'], // => stringToCamelCase
+            ['kebabCase', 'stringToKebab'], // => stringToKebab
+            ['isDate', 'isLodashDate'], // => _isLodashDate
+        ],
     },
     css: ['@/assets/scss/main.scss'],
 })

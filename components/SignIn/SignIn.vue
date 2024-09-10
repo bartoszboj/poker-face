@@ -12,17 +12,17 @@
             class="mx-auto my-4"
         />
         <v-tabs v-model="tab" align-tabs="center">
-            <v-tab :key="LoginEnum.LoginKey" :value="LoginEnum.LoginKey">
+            <v-tab :key="EnumLogin.LoginKey" :value="EnumLogin.LoginKey">
                 {{ $t('Sign in') }}
             </v-tab>
-            <v-tab :key="LoginEnum.RegisterKey" :value="LoginEnum.RegisterKey">
+            <v-tab :key="EnumLogin.RegisterKey" :value="EnumLogin.RegisterKey">
                 {{ $t('Create account') }}
             </v-tab>
         </v-tabs>
         <v-tabs-window v-model="tab">
             <v-tabs-window-item
-                :key="LoginEnum.LoginKey"
-                :value="LoginEnum.LoginKey"
+                :key="EnumLogin.LoginKey"
+                :value="EnumLogin.LoginKey"
                 class="p-8"
             >
                 <v-form
@@ -65,8 +65,8 @@
                 </v-form>
             </v-tabs-window-item>
             <v-tabs-window-item
-                :key="LoginEnum.RegisterKey"
-                :value="LoginEnum.RegisterKey"
+                :key="EnumLogin.RegisterKey"
+                :value="EnumLogin.RegisterKey"
                 class="p-8"
             >
                 <v-form
@@ -77,7 +77,7 @@
                     <div class="mb-2 space-y-3">
                         <v-text-field
                             v-model="signUpForm.username"
-                            :maxlength="LoginEnum.UsernameMaxCharacters"
+                            :maxlength="EnumLogin.UsernameMaxCharacters"
                             required
                             :label="$t('Username')"
                             name="username"
@@ -86,7 +86,7 @@
                         />
                         <v-text-field
                             v-model="signUpForm.mail"
-                            :maxlength="LoginEnum.NameMaxCharacters"
+                            :maxlength="EnumLogin.NameMaxCharacters"
                             required
                             :label="$t('E-mail')"
                             name="e-mail"
@@ -95,7 +95,7 @@
                         />
                         <v-text-field
                             v-model="signUpForm.name"
-                            :maxlength="LoginEnum.NameMaxCharacters"
+                            :maxlength="EnumLogin.NameMaxCharacters"
                             required
                             :label="$t('Name')"
                             name="name"
@@ -104,7 +104,7 @@
                         />
                         <v-text-field
                             v-model="signUpForm.surname"
-                            :maxlength="LoginEnum.NameMaxCharacters"
+                            :maxlength="EnumLogin.NameMaxCharacters"
                             required
                             :label="$t('Surname')"
                             name="surname"
@@ -113,7 +113,7 @@
                         />
                         <v-text-field
                             v-model="signUpForm.password"
-                            :maxlength="LoginEnum.PasswordMaxCharacters"
+                            :maxlength="EnumLogin.PasswordMaxCharacters"
                             required
                             :label="$t('Password')"
                             name="password"
@@ -122,7 +122,7 @@
                         />
                         <v-text-field
                             v-model="signUpForm.repeatedPassword"
-                            :maxlength="LoginEnum.PasswordMaxCharacters"
+                            :maxlength="EnumLogin.PasswordMaxCharacters"
                             required
                             :label="$t('Repeat password')"
                             name="repeat-password"
@@ -152,12 +152,12 @@
 </template>
 
 <script lang="ts" setup>
-    import LoginEnum from '~/Enums/LoginEnum'
+    import EnumLogin from '~/Enums/EnumLogin'
     const { t } = useI18n()
 
     const imgUrl =
         'https://purepng.com/public/uploads/large/purepng.com-poker-chipspokercard-gamescombines-gamblingstrategyskillsportgamepoker-chips-1701528180814g4ufq.png'
-    const tab = ref(LoginEnum.LoginKey)
+    const tab = ref(EnumLogin.LoginKey)
     const loading = ref(false)
 
     const signInFormValid = ref(false)
@@ -180,24 +180,24 @@
         isRequired: [(v) => !!v || t('This field is required.')],
         username: [
             (v) =>
-                (v && v.length <= LoginEnum.UsernameMaxCharacters) ||
+                (v && v.length <= EnumLogin.UsernameMaxCharacters) ||
                 t(
                     `Username must be less than UsernameMaxCharacters characters.`,
-                    { UsernameMaxCharacters: LoginEnum.UsernameMaxCharacters },
+                    { UsernameMaxCharacters: EnumLogin.UsernameMaxCharacters },
                 ),
         ],
         name: [
             (v) =>
-                (v && v.length <= LoginEnum.NameMaxCharacters) ||
+                (v && v.length <= EnumLogin.NameMaxCharacters) ||
                 t(`Name must be less than NameMaxCharacters characters.`, {
-                    NameMaxCharacters: LoginEnum.NameMaxCharacters,
+                    NameMaxCharacters: EnumLogin.NameMaxCharacters,
                 }),
         ],
         surname: [
             (v) =>
-                (v && v.length <= LoginEnum.NameMaxCharacters) ||
+                (v && v.length <= EnumLogin.NameMaxCharacters) ||
                 t(`Surname must be less than NameMaxCharacters characters.`, {
-                    NameMaxCharacters: LoginEnum.NameMaxCharacters,
+                    NameMaxCharacters: EnumLogin.NameMaxCharacters,
                 }),
         ],
         mail: [
@@ -208,10 +208,10 @@
         ],
         password: [
             (v) =>
-                (v && v.length <= LoginEnum.PasswordMaxCharacters) ||
+                (v && v.length <= EnumLogin.PasswordMaxCharacters) ||
                 t(
                     'Password must be less than PasswordMaxCharacters characters.',
-                    { PasswordMaxCharacters: LoginEnum.PasswordMaxCharacters },
+                    { PasswordMaxCharacters: EnumLogin.PasswordMaxCharacters },
                 ),
         ],
         repeatedPassword: [
