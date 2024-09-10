@@ -4,7 +4,10 @@
         <NuxtLayout>
             <NuxtPage />
         </NuxtLayout>
+        <GameModal />
     </v-app>
 </template>
 
-<script setup></script>
+<script setup>
+    import GameModal from './components/modals/GameModal/GameModal.vue'
+</script>
