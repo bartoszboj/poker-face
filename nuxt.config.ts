@@ -2,7 +2,12 @@
 export default defineNuxtConfig({
     compatibilityDate: '2024-04-03',
     devtools: { enabled: true },
-    plugins: ['~/plugins/flags.ts'],
+    ssr: false,
+    plugins: [
+        '~/plugins/flags.ts',
+        '~/plugins/directives.ts',
+        '~/plugins/toastify.ts',
+    ],
     modules: [
         '@nuxtjs/i18n',
         '@pinia/nuxt',
@@ -11,6 +16,7 @@ export default defineNuxtConfig({
         'vuetify-nuxt-module',
         '@nuxtjs/device',
         'nuxt-lodash',
+        'nuxt-vuefire',
     ],
     vuetify: {
         vuetifyOptions: './vuetify.config.ts',
@@ -39,6 +45,20 @@ export default defineNuxtConfig({
             ['kebabCase', 'stringToKebab'], // => stringToKebab
             ['isDate', 'isLodashDate'], // => _isLodashDate
         ],
+    },
+    vuefire: {
+        auth: {
+            enabled: true,
+        },
+        config: {
+            apiKey: process.env.NUXT_FIREBASE_API_KEY,
+            authDomain: process.env.NUXT_FIREBASE_AUTH_DOMAIN,
+            projectId: process.env.NUXT_FIREBASE_PROJECT_ID,
+            storageBucket: process.env.NUXT_FIREBASE_STORAGE_BUCKET,
+            messagingSenderId: process.env.NUXT_FIREBASE_MESSAGING_SENDER_ID,
+            appId: process.env.NUXT_FIREBASE_APP_ID,
+            measurementId: process.env.NUXT_FIREBASE_MEASUREMENT_ID,
+        },
     },
     css: ['@/assets/scss/main.scss'],
 })

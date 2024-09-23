@@ -1,6 +1,6 @@
 <template>
     <v-layout>
-        <div class="container mx-auto signInLayout">
+        <div class="mx-auto signInLayout">
             <slot />
         </div>
         <Footer />

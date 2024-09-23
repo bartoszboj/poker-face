@@ -3,7 +3,9 @@
 </template>
 
 <script lang="ts" setup>
-    defineProps(['to'])
+    defineProps<{
+        to: string
+    }>()
 
     const localePath = useLocalePath()
 </script>

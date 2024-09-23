@@ -8,6 +8,12 @@ export default defineVuetifyConfiguration({
         VTextField: {
             variant: 'outlined',
         },
+        VAutocomplete: {
+            variant: 'outlined',
+        },
+        VFileInput: {
+            variant: 'outlined',
+        },
     },
     icons: {
         defaultSet: 'mdi',

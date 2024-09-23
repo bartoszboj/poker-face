@@ -1,8 +1,10 @@
 export default defineNuxtRouteMiddleware((to) => {
     const localePath = useLocalePath()
 
-    if (to.path === localePath('/')) {
-        console.log({ to })
+    const path =
+        to.path[to.path.length - 1] == '/' ? to.path.slice(0, -1) : to.path
+
+    if (path === localePath('/') || path == '/') {
         return navigateTo(localePath('scoreboard'))
     }
 })

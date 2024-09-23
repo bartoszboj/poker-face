@@ -25,10 +25,34 @@
             >
                 <template #append>
                     <span class="pr-2">{{
-                        $t('Hi, userName', { userName: userName })
+                        $t('Hi, userName', { userName: userDisplayName })
                     }}</span>
-                    <Avatar :src="avatarSrc" :size="24" />
+                    <Avatar :src="userAvatar" :size="24" />
                 </template>
+                <v-menu activator="parent">
+                    <v-list>
+                        <v-list-item link prepend-icon="mdi-account">
+                            <v-list-item-title>{{
+                                $t('Profile')
+                            }}</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link prepend-icon="mdi-cog">
+                            <v-list-item-title>{{
+                                $t('Settings')
+                            }}</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item link>
+                            <v-btn
+                                color="error"
+                                block
+                                prepend-icon="mdi-logout"
+                                @click="logout"
+                            >
+                                {{ $t('Sign out') }}
+                            </v-btn>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
             </v-btn>
         </v-system-bar>
         <v-navigation-drawer
@@ -37,7 +61,7 @@
             persisent
             :scrim="false"
         >
-            <container :component="sideNavigationComponent" />
+            <component :is="sideNavigationComponent" />
         </v-navigation-drawer>
         <v-app-bar order="2">
             <v-toolbar-items class="flex">
@@ -48,7 +72,7 @@
                     class="flex items-center px-10"
                     @click="$router.push(localePath(item.to))"
                 >
-                    {{ $t(item.name) }}
+                    {{ item.name }}
                 </v-btn>
             </v-toolbar-items>
             <v-spacer />
@@ -69,7 +93,6 @@
 <script lang="ts" setup>
     import Footer from '~/components/Footer/Footer.vue'
     import Avatar from '~/components/Avatar/Avatar.vue'
-    import Container from '~/components/Container/Container.vue'
     import LocaleLink from '~/components/Utils/LocaleLink/LocaleLink.vue'
     import EnumRoutes from '~/Enums/EnumRoutes'
     import EnumModals from '~/Enums/EnumModals'
@@ -77,27 +100,34 @@
     const route = useRoute()
     const localePath = useLocalePath()
     const { openModal } = useModalManagerStore()
+    const { t } = useI18n()
+    const authStore = useAuthStore()
+    const { userDisplayName, userAvatar, isLogged } = storeToRefs(authStore)
+    const { logout } = authStore
 
-    const toolbarItems = [
+    const toolbarItems = reactive([
         {
-            name: 'Scoreboard',
+            name: t('Scoreboard'),
             to: '/scoreboard/global',
         },
         {
-            name: 'Game history',
+            name: t('Game history'),
             to: '/history',
         },
         {
-            name: 'Groups',
+            name: t('Groups'),
             to: '/groups',
         },
         {
-            name: 'Friends',
+            name: t('Friends'),
             to: '/friends',
         },
-    ]
+    ])
 
-    const isDrawerOpened = ref(false)
+    const isDrawerOpened = computed(() => {
+        return !!route.meta.sideNavigationComponent
+    })
+
     const sideNavigationComponent = computed(
         () => route?.meta?.sideNavigationComponent,
     )
@@ -108,21 +138,6 @@
             ? true
             : link === route.path
     }
-
-    const isLogged = false
-    const userName = 'Bartek'
-    const avatarSrc =
-        'https://scontent-waw2-2.xx.fbcdn.net/v/t31.18172-1/15724546_1369417316416570_1515949336552278728_o.jpg?stp=dst-jpg_p200x200&_nc_cat=103&ccb=1-7&_nc_sid=e4545e&_nc_ohc=IGA9E3oDTw0Q7kNvgE2WoI7&_nc_ht=scontent-waw2-2.xx&oh=00_AYC-jFX06OQs3WanxQDmbfBaCjiLk-vUBP54ni5aC2fUaw&oe=66DCA349'
-
-    watch(
-        () => route.meta.sideNavigationComponent,
-        () => {
-            isDrawerOpened.value = !!(
-                route?.meta?.sideNavigationComponent &&
-                Object.keys(route.meta.sideNavigationComponent).length
-            )
-        },
-    )
 </script>
 
 <style lang="scss"></style>
