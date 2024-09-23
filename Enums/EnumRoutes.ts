@@ -6,7 +6,7 @@ enum EnumRoutes {
     FRIENDS = 'friends',
     GROUPS = 'groups',
     HISTORY = 'history',
-    LOGIN = 'LOGIN',
+    LOGIN = 'login',
 }
 
 export default EnumRoutes
