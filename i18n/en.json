@@ -24,5 +24,7 @@
     "Passwords must match.": "Passwords must match.",
     "Global ranking": "Global ranking",
     "Your groups": "Your groups",
-    "Global": "Global"
+    "Global": "Global",
+    "Game gameId": "Game {gameId}",
+    "rankedPoints points": "{rankedPoints} points"
 }

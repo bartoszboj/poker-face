@@ -1,7 +1,8 @@
 import type { FirebaseError } from 'firebase-admin'
+import type { FirestoreError } from 'firebase/firestore'
 import EnumFirebaseErrorMessages from '~/Enums/EnumFirebaseErrorMessages'
 
-export default (error: FirebaseError) => {
+export default (error: FirebaseError | FirestoreError) => {
     const { $i18n, $toast } = useNuxtApp()
 
     const code = error.code.split('/')[1]

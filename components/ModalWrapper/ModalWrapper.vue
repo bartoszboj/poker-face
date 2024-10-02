@@ -4,25 +4,35 @@
         :content-class="`modal-wrapper__${options.type}`"
         :fullscreen="$device.isMobile"
         :max-width="options.maxWidth"
+        :min-height="options.minHeight"
         :persistent="options.persistent"
         :scrollable="options.scrollable"
         :transition="options.transition"
         :attach="options.attach"
         :target="options.target"
         @update:model-value="handleValueChange"
-        @click:outside="closeModal(modalId)"
+        @click:outside="!options.persistent && closeModal(modalId)"
     >
-        <v-card>
-            <v-toolbar flat>
-                <v-toolbar-title>{{ options.modalTitle }}</v-toolbar-title>
+        <v-card class="flex" width="100%">
+            <v-toolbar flat color="white" height="48">
+                <slot :close="close" name="actions" />
                 <v-spacer />
-                <v-btn icon @click="closeModal(modalId)">
-                    <v-icon> mdi-close </v-icon>
-                </v-btn>
+                <slot :close="close" name="title">
+                    <v-toolbar-title>{{ options.modalTitle }}</v-toolbar-title>
+                </slot>
+                <v-spacer />
+                <slot :close="close" name="navigation">
+                    <v-btn
+                        icon
+                        flat
+                        variant="plain"
+                        @click="closeModal(modalId)"
+                    >
+                        <v-icon> mdi-close </v-icon>
+                    </v-btn>
+                </slot>
             </v-toolbar>
-            <div class="modal-content">
-                <slot :close="closeModal" />
-            </div>
+            <slot :close="close" />
         </v-card>
     </v-dialog>
 </template>
@@ -42,15 +52,13 @@
         },
     })
 
-    // const isOpened = ref(false)
-
     const modalManagerStore = useModalManagerStore()
     const { closeModal } = modalManagerStore
-    const { modals } = storeToRefs(modalManagerStore)
+    const { openedModals } = storeToRefs(modalManagerStore)
     const { modalId } = props
 
     const isOpened = computed(() => {
-        return modals.value.includes(modalId)
+        return openedModals.value.includes(modalId)
     })
 
     function handleValueChange(value: boolean) {
@@ -58,6 +66,26 @@
             closeModal(modalId)
         }
     }
+
+    function close() {
+        closeModal(modalId)
+    }
 </script>
 
-<style></style>
+<style lang="scss">
+    .v-toolbar__content {
+        position: relative;
+
+        .v-toolbar-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+    .v-dialog {
+        > div.v-overlay__content {
+            flex-direction: row;
+        }
+    }
+</style>

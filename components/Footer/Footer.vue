@@ -1,8 +1,8 @@
 <template>
     <v-footer app>
         <!-- <v-switch :label="themeIcon" /> -->
-        <v-spacer />
         <LanguageSwitcher />
+        <v-spacer />
     </v-footer>
 </template>
 

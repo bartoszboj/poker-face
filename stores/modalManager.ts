@@ -1,45 +1,39 @@
 import { defineStore } from 'pinia'
+import EnumModals from '~/Enums/EnumModals'
 
-type State = {
-    modals: string[]
-}
+export const useModalManagerStore = defineStore('modalManagerStore', () => {
+    const openedModals = ref<string[]>([])
+    const gameModalSettings = ref<GamePayload | null>(null)
 
-export const useModalManagerStore = defineStore({
-    id: 'modalManagerStore',
-    state: (): State => ({
-        modals: [],
-    }),
-    actions: {
-        openModal(modalId: string) {
-            if (this.modals.includes(modalId)) {
-                return
-            }
+    function openModal(
+        modalId: string,
+        gameSettingsPayload: GamePayload | null = null,
+    ) {
+        if (openedModals.value.includes(modalId)) {
+            return
+        }
 
-            this.modals.unshift(modalId)
-        },
-        closeModal(modalId: string) {
-            this.modals = this.modals.filter((element) => element !== modalId)
-        },
-    },
+        openedModals.value.unshift(modalId)
+        if (gameSettingsPayload) {
+            gameModalSettings.value = gameSettingsPayload
+        }
+    }
+
+    function closeModal(modalId: string) {
+        openedModals.value = openedModals.value.filter(
+            (element) => element !== modalId,
+        )
+
+        if (modalId === EnumModals.GAME_MODAL) {
+            gameModalSettings.value = null
+        }
+    }
+
+    return {
+        openedModals,
+        gameModalSettings,
+
+        openModal,
+        closeModal,
+    }
 })
-
-// import { defineStore } from 'pinia'
-
-// type State = {
-//     modals: boolean
-// }
-
-// export const useModalManagerStore = defineStore({
-//     id: 'modalManagerStore',
-//     state: (): State => ({
-//         modals: false,
-//     }),
-//     actions: {
-//         openModal() {
-//             this.modals = true
-//         },
-//         closeModal() {
-//             this.modals = false
-//         },
-//     },
-// })

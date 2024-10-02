@@ -35,6 +35,7 @@
                             v-model="signInForm.email"
                             required
                             :label="$t('E-mail')"
+                            :aria-label="$t('E-mail')"
                             prepend-inner-icon="mdi-account"
                             name="username"
                             type="text"
@@ -44,7 +45,8 @@
                         <v-text-field
                             v-model="signInForm.password"
                             required
-                            label="Password"
+                            :label="$t('Password')"
+                            :aria-label="$t('Password')"
                             name="password"
                             prepend-inner-icon="mdi-lock"
                             type="password"
@@ -72,6 +74,7 @@
                 <v-form
                     v-model="signUpFormValid"
                     :readonly="isLoading"
+                    autocomplete="off"
                     @submit.prevent="handleSignUp"
                 >
                     <div class="mb-2 space-y-3">
@@ -80,9 +83,10 @@
                             :maxlength="EnumLogin.USERNAME_MAX_CHARS"
                             required
                             :label="$t('Username')"
-                            name="username"
+                            :aria-label="$t('Username')"
                             type="text"
                             validate-on="blur"
+                            autocomplete="null"
                             :rules="[...rules.isRequired, ...rules.username]"
                         />
                         <v-text-field
@@ -90,7 +94,8 @@
                             :maxlength="EnumLogin.NAME_MAX_CHARS"
                             required
                             :label="$t('E-mail')"
-                            name="e-mail"
+                            :aria-label="$t('E-mail')"
+                            autocomplete="null"
                             type="mail"
                             :rules="[...rules.isRequired, ...rules.email]"
                         />
@@ -99,7 +104,7 @@
                             :maxlength="EnumLogin.NAME_MAX_CHARS"
                             required
                             :label="$t('Name')"
-                            name="name"
+                            :aria-label="$t('Name')"
                             type="text"
                             :rules="[...rules.isRequired, ...rules.name]"
                         />
@@ -108,7 +113,7 @@
                             :maxlength="EnumLogin.NAME_MAX_CHARS"
                             required
                             :label="$t('Surname')"
-                            name="surname"
+                            :aria-label="$t('Surname')"
                             type="text"
                             :rules="[...rules.isRequired, ...rules.surname]"
                         />
@@ -117,7 +122,8 @@
                             :maxlength="EnumLogin.PASSWORD_MAX_CHARS"
                             required
                             :label="$t('Password')"
-                            name="password"
+                            :aria-label="$t('Password')"
+                            autocomplete="new-password"
                             type="password"
                             :rules="[...rules.isRequired, ...rules.password]"
                         />
@@ -126,7 +132,7 @@
                             :maxlength="EnumLogin.PASSWORD_MAX_CHARS"
                             required
                             :label="$t('Repeat password')"
-                            name="repeat-password"
+                            :aria-label="$t('Repeat password')"
                             type="password"
                             :rules="[
                                 ...rules.isRequired,
@@ -148,6 +154,7 @@
                         prepend-icon="mdi-check"
                         :disabled="!signUpFormValid"
                         :loading="isLoading"
+                        :aria-label="$t('Create account')"
                     >
                         {{ $t('Create account') }}
                     </v-btn>
