@@ -24,5 +24,7 @@
     "Passwords must match.": "Hasła muszą się zgadzać.",
     "Global ranking": "Ranking globalny",
     "Your groups": "Twoje grupy",
-    "Global": "Globalny"
+    "Global": "Globalny",
+    "Game gameId": "Gra {gameId}",
+    "rankedPoints points": "{rankedPoints} punktów"
 }

@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
-import type { User } from 'firebase/auth'
+import type { User, Unsubscribe } from 'firebase/auth'
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     updateProfile,
     signOut,
 } from 'firebase/auth'
-import { doc, setDoc, Timestamp } from 'firebase/firestore'
+import { doc, setDoc, Timestamp, onSnapshot } from 'firebase/firestore'
 import {
     ref as storageRef,
     uploadBytes,
@@ -15,21 +15,52 @@ import {
 import { getConvertedPictureFiles } from '~/utils/picture'
 import EnumPictureSizes from '~/Enums/EnumPictureSizes'
 import type { UserInfo } from 'firebase-admin/auth'
+import { getFunctions, httpsCallable } from 'firebase/functions'
 
 export const useAuthStore = defineStore('authStore', () => {
     const isLogged = ref(false)
     const isLoading = ref(false)
     const user = ref<User | UserInfo | null>(null)
+    const userData = ref<UserData | null>(null)
+    const pendingGames = ref<GamePayload[] | null>(null)
+    const unsubUserData = ref<Unsubscribe>(() => void null)
 
     const auth = useFirebaseAuth()!
     const db = useFirestore()!
+    const fn = getFunctions(useFirebaseApp(), 'europe-central2')!
     const storage = useFirebaseStorage()!
     const router = useRouter()
     const route = useRoute()
     const localePath = useLocalePath()
 
-    const userDisplayName = computed(() => user.value?.displayName)
-    const userAvatar = computed(() => user.value?.photoURL)
+    const getUserDisplayName = computed(() => user.value?.displayName)
+    const getUserAvatar = computed(() => user.value?.photoURL)
+    const getUserRankedScore = computed(() => userData.value?.rankedPoints)
+
+    function $reset() {
+        isLogged.value = false
+        isLoading.value = false
+        user.value = null
+        userData.value = null
+        unsubscribeToUserData()
+    }
+
+    function subscribeToUserData(uid: string) {
+        unsubUserData.value = onSnapshot(
+            doc(db, 'users', uid),
+            (snapshot) => {
+                userData.value = snapshot.data() as UserData
+            },
+            (error) => {
+                handleFirebaseError(error)
+            },
+        )
+    }
+
+    function unsubscribeToUserData() {
+        unsubUserData.value()
+        unsubUserData.value = () => void null
+    }
 
     async function signInWithEmail(payload: SignInForm) {
         const { email, password } = payload
@@ -120,6 +151,12 @@ export const useAuthStore = defineStore('authStore', () => {
                         username: username,
                         uid: authenticatedUser?.uid,
                         created_at: Timestamp.fromDate(new Date()),
+                        rankedPoints: 1000,
+                        informalPoints: 1000,
+                        friends: [],
+                        groups: [],
+                        matchHistory: [],
+                        pendingMatches: [],
                     },
                     { merge: true },
                 )
@@ -146,14 +183,56 @@ export const useAuthStore = defineStore('authStore', () => {
             })
     }
 
+    watch(
+        userData,
+        (actualUserData: UserData | null, prevUserData: UserData | null) => {
+            console.log(
+                'prevUserData?.pendingMatches: ',
+                prevUserData?.pendingMatches,
+            )
+            console.log(
+                'userData?.pendingMatches',
+                actualUserData?.pendingMatches,
+            )
+
+            console.log(
+                `prevUserData.pendingMatches.length === userData.pendingMatches.length: `,
+                prevUserData?.pendingMatches?.length ===
+                    actualUserData?.pendingMatches?.length,
+            )
+
+            if (
+                prevUserData?.pendingMatches?.length !==
+                actualUserData?.pendingMatches?.length
+            ) {
+                const getPendingGames = httpsCallable(fn, 'getPendingGames')
+                getPendingGames().then((res) => {
+                    if (!res.data) {
+                        return
+                    }
+                    const data = res?.data as GamePayload[]
+
+                    pendingGames.value = data
+                })
+            }
+        },
+        { deep: true },
+    )
+
     return {
         isLogged,
         isLoading,
         user,
+        userData,
+        pendingGames,
 
-        userDisplayName,
-        userAvatar,
+        getUserDisplayName,
+        getUserAvatar,
+        getUserRankedScore,
 
+        $reset,
+        subscribeToUserData,
+        unsubscribeToUserData,
         signInWithEmail,
         signUpWithEmail,
         logout,

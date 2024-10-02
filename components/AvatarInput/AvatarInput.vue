@@ -2,6 +2,7 @@
     <v-file-input
         v-model="model"
         :label="$t('Add picture')"
+        :aria-label="$t('Add picture')"
         :accept="accept"
         chips
         show-size

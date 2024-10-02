@@ -3,7 +3,11 @@
         <v-system-bar app height="42">
             <span class="flex items-center">
                 <v-icon class="px-3">mdi-medal-outline</v-icon>
-                1234 points
+                {{
+                    $t('rankedPoints points', {
+                        rankedPoints: getUserRankedScore,
+                    })
+                }}
             </span>
             <v-spacer />
             <span>poker-face</span>
@@ -25,9 +29,9 @@
             >
                 <template #append>
                     <span class="pr-2">{{
-                        $t('Hi, userName', { userName: userDisplayName })
+                        $t('Hi, userName', { userName: getUserDisplayName })
                     }}</span>
-                    <Avatar :src="userAvatar" :size="24" />
+                    <Avatar :src="getUserAvatar" :size="24" />
                 </template>
                 <v-menu activator="parent">
                     <v-list>
@@ -85,8 +89,9 @@
         </v-app-bar>
         <v-main>
             <slot />
+            <PendingMatches />
         </v-main>
-        <Footer />
+        <Footer app order="2" />
     </v-layout>
 </template>
 
@@ -96,13 +101,15 @@
     import LocaleLink from '~/components/Utils/LocaleLink/LocaleLink.vue'
     import EnumRoutes from '~/Enums/EnumRoutes'
     import EnumModals from '~/Enums/EnumModals'
+    import PendingMatches from '~/components/PendingMatches/PendingMatches.vue'
 
     const route = useRoute()
     const localePath = useLocalePath()
     const { openModal } = useModalManagerStore()
     const { t } = useI18n()
     const authStore = useAuthStore()
-    const { userDisplayName, userAvatar, isLogged } = storeToRefs(authStore)
+    const { getUserDisplayName, getUserAvatar, getUserRankedScore, isLogged } =
+        storeToRefs(authStore)
     const { logout } = authStore
 
     const toolbarItems = reactive([
